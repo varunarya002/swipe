@@ -1,5 +1,9 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View
+} from 'react-native';
 import { Card, Button } from 'react-native-elements';
 import Deck from './src/Deck';
 
@@ -15,6 +19,7 @@ const DATA = [
 ];
 
 export default class App extends React.Component {
+
   renderCard = (item) => (
     <Card
       title={item.text}
