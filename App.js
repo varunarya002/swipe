@@ -17,9 +17,7 @@ const DATA = [
   { id: 7, text: 'Card #7', uri: 'http://imgs.abduzeedo.com/files/paul0v2/unsplash/unsplash-09.jpg' },
   { id: 8, text: 'Card #8', uri: 'http://imgs.abduzeedo.com/files/paul0v2/unsplash/unsplash-01.jpg' },
 ];
-
 export default class App extends React.Component {
-  
   renderNoMoreCards = () => (
     <Card title="All Done!">
       <Text style={{ marginBottom: 10 }}>
@@ -52,11 +50,11 @@ export default class App extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <Deck
+      <Deck
         data={DATA}
         renderCard={this.renderCard}
         renderNoMoreCards={this.renderNoMoreCards}
-        />
+      />
       </View>
     );
   }
@@ -65,6 +63,5 @@ export default class App extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
   },
 });

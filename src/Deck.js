@@ -43,7 +43,7 @@ class Deck extends Component {
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
-    if (nextProps.data != this.props.data) {
+    if (nextProps.data !== this.props.data) {
       this.setState({
         index: 0,
       })
