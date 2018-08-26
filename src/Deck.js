@@ -4,7 +4,8 @@ import {
   View,
   Animated,
   PanResponder,
-  Dimensions
+  Dimensions,
+  UIManager
 } from 'react-native';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
@@ -39,7 +40,20 @@ class Deck extends Component {
         }
       }
     });
-  };
+  }
+
+  UNSAFE_componentWillReceiveProps(nextProps) {
+    if (nextProps.data != this.props.data) {
+      this.setState({
+        index: 0,
+      })
+    }
+  }
+
+  UNSAFE_componentWillUpdate() {
+    UIManager.setLayoutAnimationEnabledExperimental
+    && UIManager.setLayoutAnimationEnabledExperimental(true);
+  }
 
   forceSwipe = (direction) => {
     Animated.timing(this.position, {
@@ -74,8 +88,12 @@ class Deck extends Component {
     };
   }
 
-  renderCards = () => (
-    this.props.data.map((item, i) => {
+  renderCards = () => {
+    if (this.state.index >= this.props.data.length) {
+      return this.props.renderNoMoreCards();
+    }
+
+    return this.props.data.map((item, i) => {
       if (i < this.state.index) {
         return null;
       }
@@ -83,24 +101,44 @@ class Deck extends Component {
         return (
           <Animated.View
             {...this.panResponder.panHandlers}
-            style={this.getCardStyle()}
-            key={item.id + i}
+            style={[this.getCardStyle(), styles.cardStyle, { zIndex: 5 }]}
+            key={`${item.id}${i}`}
           >
             { this.props.renderCard(item) }
           </Animated.View>
         );
       }
-      return this.props.renderCard(item);
-    })
-  );
+      return (
+        <Animated.View
+          key={item.id}
+          style={[
+            styles.cardStyle,
+            {
+              zIndex: i * -1,
+              top: 10 * (i - this.state.index),
+            }
+          ]}
+        >
+          {this.props.renderCard(item)}
+        </Animated.View>
+      );
+    }).reverse();
+  }
 
   render() {
     return (
       <View>
-        <View>{this.renderCards()}</View>
+        {this.renderCards()}
       </View>
     );
   }
 }
+
+const styles = {
+  cardStyle: {
+    position: 'absolute',
+    width: SCREEN_WIDTH,
+  }
+};
 
 export default Deck;
